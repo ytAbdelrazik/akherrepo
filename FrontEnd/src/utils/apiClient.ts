@@ -18,7 +18,26 @@ export async function signUp(userData: {
     console.error('Error during sign-up:', error);
     throw error;
   }}
-
+  export async function scheduleBackup(intervalDays: number): Promise<string> {
+    try {
+      const response = await apiClient.post('/backup/schedule', { intervalDays });
+      return response.data; // Assuming the response contains the success message
+    } catch (error) {
+      console.error('Error scheduling backup:', error);
+      throw error;
+    }
+  }
+  
+  // Stop the backup schedule
+  export async function stopBackupSchedule(): Promise<string> {
+    try {
+      const response = await apiClient.delete('/backup/schedule');
+      return response.data; 
+    } catch (error) {
+      console.error('Error stopping backup schedule:', error);
+      throw error;
+    }
+  }
 // Add a request interceptor
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
@@ -32,6 +51,33 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+
+
+export const toggleCourseAvailability = async (courseId: string, isAvailable: boolean) => {
+  try {
+    // Ensure the URL is correct
+    const response = await apiClient.patch(`/users/courses/${courseId}/availability`, {
+      isAvailable: !isAvailable, // Toggle the availability
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error in toggleCourseAvailability:', error);
+    throw error; // Re-throw error to be caught in the frontend
+  }
+};
+
+
+
+
+
+
+export const getAllCourses = async () => {
+  const response = await apiClient.get('/courses');
+  return response.data;
+};
+
+
 
 
 export const getUserById = async (userId: string) => {
