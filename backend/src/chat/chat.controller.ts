@@ -183,6 +183,19 @@ async getMessages(
 ) {
   return this.chatService.getMessages(chatId, lastMessageId);
 }
+  @Get('getchat')
+async getAllChatsForUser(@Query('userId') userId: string) {
+  if (!userId) {
+    throw new NotFoundException('User ID is required.');
+  }
+
+  const chats = await this.chatService.getChatsForUser(userId);
+  if (!chats || chats.length === 0) {
+    throw new NotFoundException('No chats found for this user.');
+  }
+
+  return chats;
+}
   
 }
 
