@@ -300,13 +300,22 @@ export class UserService {
 
   
   async deleteUser(userId: string): Promise<void> {
-    const user = await this.userModel.findOne({ userId }).exec();
+    // Fetch the user by ID using the getUserById function
+    const user = await this.getUserById(userId);
   
-    if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+    // Check the user's role and delete accordingly
+    if (user.role === 'admin') {
+      await this.adminModel.deleteOne({ userId }).exec();
+    } else if (user.role === 'instructor') {
+      await this.instructorModel.deleteOne({ userId }).exec();
+    } else if (user.role === 'student') {
+      await this.studentModel.deleteOne({ userId }).exec();
+    } else {
+      // Handle deletion for other roles (if necessary)
+      await this.userModel.deleteOne({ userId }).exec();
     }
-
-    await this.userModel.deleteOne({ userId }).exec();
   }
+  
+  
   
 }

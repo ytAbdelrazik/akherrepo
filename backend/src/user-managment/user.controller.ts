@@ -168,7 +168,7 @@ export class UserController {
     return this.userService.updateCourseAvailability(courseId, isAvailable);
   }
 
-  @Delete('users/:userId')
+  @Delete('deleteus/:userId')
   @UseGuards(RolesGuard)
   @Roles('admin') // admin deleting other users
   async deleteUserByAdmin(@Param('userId') userId: string) {
@@ -176,12 +176,9 @@ export class UserController {
   }
 
   
-  @Delete('users/self')
-  @UseGuards(RolesGuard)
-  @Roles('student','instructor', 'admin') // Users with these roles can delete themselves
-  async deleteSelf(@Request() req: any) {
-    const userId = req.user.userId; // Get the userId from the request object
-    return this.userService.deleteUser(userId);
+  @Delete('users/self/:userId')
+  async deleteSelf(@Param('userId') userId: string) {
+   return this.userService.deleteUser(userId);
   }
   
 
