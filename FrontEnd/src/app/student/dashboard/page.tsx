@@ -23,8 +23,10 @@ interface DecodedToken {
 const StudentDashboard: React.FC = () => {
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [completedCourses, setCompletedCourses] = useState<Course[]>([]);
+  const [newCourses, setNewCourses] = useState<string[]>([]); // For adding new courses
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null); // For success messages
   const [deleteStatus, setDeleteStatus] = useState<string>("");
   const router = useRouter(); // Initialize the router
 
@@ -59,6 +61,40 @@ const StudentDashboard: React.FC = () => {
       setError("Failed to load data.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddCourse = () => {
+    const courseId = prompt("Enter Course ID:");
+    if (courseId) {
+      setNewCourses([...newCourses, courseId]);
+    }
+  };
+
+  const handleSubmitCourses = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token not found in localStorage");
+      }
+
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      const studentId = decodedToken.userId;
+
+      if (!studentId) {
+        throw new Error("Student ID not found in token");
+      }
+
+      await apiClient.patch(`/users/${studentId}/add-courses/student`, {
+        courseIds: newCourses,
+      });
+
+      setSuccess("Courses added successfully!");
+      setNewCourses([]); // Clear the new courses list
+      fetchAllData(); // Refresh the data
+    } catch (err: any) {
+      console.error("Error adding courses:", err);
+      setError(err.response?.data?.message || "Failed to add courses.");
     }
   };
 
@@ -119,6 +155,31 @@ const StudentDashboard: React.FC = () => {
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">Student Dashboard</h1>
 
+        {/* Add Courses Section */}
+        <div className="bg-white shadow-md rounded-lg p-6 mb-8 border border-gray-200">
+          <h2 className="text-2xl font-semibold text-purple-600 mb-4">Add Courses</h2>
+          <ul className="list-disc pl-6 mb-4">
+            {newCourses.map((courseId, index) => (
+              <li key={index} className="text-gray-800">
+                {courseId}
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={handleAddCourse}
+            className="bg-blue-600 text-white py-2 px-6 rounded-md shadow hover:bg-blue-700 mr-4"
+          >
+            Add Course
+          </button>
+          <button
+            onClick={handleSubmitCourses}
+            className="bg-green-600 text-white py-2 px-6 rounded-md shadow hover:bg-green-700"
+          >
+            Submit Courses
+          </button>
+        </div>
+
+        {/* Enrolled and Completed Courses Sections */}
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
             <h2 className="text-2xl font-semibold text-blue-600 mb-4">Enrolled Courses</h2>
@@ -159,6 +220,7 @@ const StudentDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Other Buttons and Actions */}
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 text-center">
           <Link href="/update-profile" legacyBehavior>
             <button className="inline-block bg-blue-600 text-white py-2 px-6 rounded-md shadow hover:bg-blue-700">
