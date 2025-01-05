@@ -309,6 +309,13 @@ async getMessages(chatId: string, lastMessageId?: string) {
 
   return this.messageModel.find(filter).sort({ createdAt: 1 });
 }
+  async getChatsForUser(userId: string): Promise<Chat[]> {
+  const chats = await this.chatModel.find({ participants: userId }).exec();
+  if (!chats || chats.length === 0) {
+    throw new NotFoundException('No chats found for this user.');
+  }
+  return chats;
+}
   
 } 
   
