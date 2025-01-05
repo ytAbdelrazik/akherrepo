@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from '@/utils/apiClient';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -9,6 +10,27 @@ const admingpage = () => {
   const navigateTo = (path: string) => {
     router.push(path);
   };
+
+  const userId = localStorage.getItem('userId'); // Use consistent variable name
+  const token = localStorage.getItem('token');
+
+  const handleLogout = async () => {
+    try {
+      if (userId && token) { // Ensure both userId and token are non-empty
+        await logout(userId, token); // Call the logout function from apiClient
+        // Clear local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        // Redirect to login page after successful logout
+        router.push('/login');
+      } else {
+        alert('User is not logged in');
+      }
+    } catch (error) {
+      alert('Logout failed');
+    }
+  };
+
 
   return (
     <div style={styles.container}>
@@ -25,6 +47,10 @@ const admingpage = () => {
         </button>
         <button style={styles.button} onClick={() => navigateTo('dashboard/schedule-backup')}>
           Schedule Backup
+        </button>
+        {/* Add Logout Button */}
+        <button style={styles.button} onClick={handleLogout}>
+          Logout
         </button>
       </div>
     </div>

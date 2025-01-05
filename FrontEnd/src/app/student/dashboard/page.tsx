@@ -1,9 +1,9 @@
-"use client"; // Mark this file as a client component
+'use client'; // Mark this file as a client component
 import React, { useEffect, useState } from "react";
 import apiClient from "../../../utils/apiClient";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
-import { deleteself } from "../../../utils/apiClient";
+import { deleteself, logout } from "../../../utils/apiClient";
 import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
 
 interface Course {
@@ -75,6 +75,26 @@ const StudentDashboard: React.FC = () => {
     } catch (error) {
       console.error("Error deleting account:", error);
       router.push("/login");
+    }
+  };
+
+  const userId = localStorage.getItem('userId'); // Use consistent variable name
+  const token = localStorage.getItem('token');
+
+  const handleLogout = async () => {
+    try {
+      if (userId && token) { // Ensure both userId and token are non-empty
+        await logout(userId, token); // Call the logout function from apiClient
+        // Clear local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        // Redirect to login page after successful logout
+        router.push('/login');
+      } else {
+        alert('User is not logged in');
+      }
+    } catch (error) {
+      alert('Logout failed');
     }
   };
 
@@ -194,6 +214,16 @@ const StudentDashboard: React.FC = () => {
             className="inline-block bg-red-600 text-white py-2 px-6 rounded-md shadow hover:bg-red-700"
           >
             Delete Account
+          </button>
+        </div>
+
+        {/* Logout Button */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleLogout}
+            className="inline-block bg-gray-600 text-white py-2 px-6 rounded-md shadow hover:bg-gray-700"
+          >
+            Logout
           </button>
         </div>
       </div>
