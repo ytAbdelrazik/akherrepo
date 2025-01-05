@@ -21,6 +21,7 @@ import { BackupModule } from './backup/backup.module';
 import { QuestionBankModule } from './interactive-modules/question-bank.module';
 
 import { DiscussionsModule } from './course-management/discussions/discussions.module'; // Add this
+import { NotificationModule } from './notifications/notification.module';
 
 
 @Module({
@@ -44,6 +45,7 @@ import { DiscussionsModule } from './course-management/discussions/discussions.m
     QuestionBankModule,
     ResponsesModule,
     DiscussionsModule,
+    NotificationModule,
 
 
     // Schemas
@@ -58,6 +60,7 @@ import { DiscussionsModule } from './course-management/discussions/discussions.m
       secret: 'ahmed', // Replace with a secure secret key
       signOptions: { expiresIn: '1h' },
     }),
+    
   ],
   controllers: [],
   providers: [

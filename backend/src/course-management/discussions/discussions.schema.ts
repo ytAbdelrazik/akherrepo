@@ -3,19 +3,22 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Discussion extends Document {
-  @Prop({ required: true }) // The course ID this forum belongs to
+  @Prop({ required: true })
   courseId: string;
 
-  @Prop({ required: true }) // ID of the user who created the forum
+  @Prop({ required: true })
   userId: string;
 
-  @Prop({ required: true, enum: ['student', 'instructor'] }) // Role of the user
+  @Prop({ required: true, enum: ['student', 'instructor'] })
   role: string;
 
-  @Prop({ required: true }) // Forum content
+  @Prop({ required: true }) // Add the title field
+  title: string;
+
+  @Prop({ required: true })
   content: string;
 
-  @Prop({ default: Date.now }) // Timestamp of forum creation
+  @Prop({ default: Date.now })
   createdAt: Date;
 }
 

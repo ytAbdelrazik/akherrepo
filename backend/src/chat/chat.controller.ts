@@ -97,6 +97,7 @@ export class ChatController {
     if (!savedMessage) {
       throw new NotFoundException('Failed to send message.');
     }
+    console.log(userId1,content);
     return savedMessage;
   }
 
@@ -125,6 +126,7 @@ export class ChatController {
     if (!savedMessage) {
       throw new NotFoundException('Failed to save message.');
     }
+    console.log( senderId ,content);
     return savedMessage;
   }
 

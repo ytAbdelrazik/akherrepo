@@ -17,6 +17,7 @@ import { AdminSchema } from 'src/user-managment/admin.schema';
 import { NotificationService } from 'src/notifications/notifications.service';
 import { Notification, NotificationSchema } from 'src/notifications/notifications.schema';
 import { JwtModule } from '@nestjs/jwt';
+import { NotificationModule } from 'src/notifications/notification.module';
 //import { ChatGateway } from './chat.gateway';
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { JwtModule } from '@nestjs/jwt';
 
     ]),
     JwtModule.register({}),
+    NotificationModule,
     
   ],
   providers: [ChatService, CourseService, UserService,NotificationService],//ChatGateway],

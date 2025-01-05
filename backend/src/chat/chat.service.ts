@@ -232,6 +232,7 @@ export class ChatService {
     await chat.save();
     const notificationMessage = `You have a new message from ${senderId}`;
     await this.notificationService.createNotification( senderId, notificationMessage, 'message');
+    
 
     return message;
   }

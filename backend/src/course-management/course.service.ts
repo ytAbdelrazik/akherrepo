@@ -314,27 +314,8 @@ async updateINS(courseId: string, instructorId: string): Promise<void> {
 
 
 
-  /**
-   * Fetch all courses a student is enrolled in.
-   * @param userId - The student userId.
-   * @returns List of courses the student is enrolled in.
-   */
-  async getAllEnrolledCourses(userId: string): Promise<any[]> {
-    const student = await this.studentModel.findOne({ userId }).exec();
-
-    if (!student) {
-      throw new NotFoundException(`Student with ID ${userId} not found`);
-    }
-
-    // Fetch all courses the student is enrolled in
-    const enrolledCourses = await this.courseModel
-      .find({
-        courseId: { $in: student.enrolledCourses }, // Match courses based on enrolled IDs
-      })
-      .exec();
-
-    return enrolledCourses;
-  }
+ 
+ 
 
 
   async searchInstructors(query: string, limit = 10, skip = 0): Promise<any[]> {
@@ -427,6 +408,32 @@ async updateINS(courseId: string, instructorId: string): Promise<void> {
     course.keywords = Array.from(new Set([...(course.keywords || []), ...keywords])); // Avoid duplicates
     return await course.save();
   }
+
+  async getAllEnrolledCourses(userId: string): Promise<any[]> {
+    // Find the student document based on `userId`
+    const student = await this.studentModel.findOne({ userId }).exec();
+
+    if (!student) {
+        throw new NotFoundException(`Student with ID ${userId} not found`);
+    }
+
+    // Ensure the `enrolledCourses` field exists and contains valid ObjectIds
+    if (!student.enrolledCourses || !Array.isArray(student.enrolledCourses)) {
+        return [];
+    }
+
+    // Fetch courses based on enrolled course IDs, excluding outdated courses
+    const enrolledCourses = await this.courseModel
+        .find({
+            _id: { $in: student.enrolledCourses }, // Match the `_id` of enrolled courses
+            isOutdated: { $ne: true }, // Ensure the course is not outdated
+        })
+        .select("courseId title description difficultyLevel category multimedia createdBy") // Select required fields
+        .exec();
+
+    return enrolledCourses; // Return the fetched courses
+}
+  
   
 
 

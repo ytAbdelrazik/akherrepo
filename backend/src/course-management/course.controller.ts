@@ -128,20 +128,7 @@ export class CourseController {
    * @param req - The request object containing JWT user details.
    * @returns List of enrolled courses for the student.
    */
-  @Get('students/enrolled-courses')
-  @UseGuards(RolesGuard) // Ensure authentication and role validation
-  async getAllEnrolledCourses(@Req() req) {
-    console.log('Authenticated User:', req.user); // Log the authenticated user
-    const userId = req.user.userId;
-    const role = req.user.role;
-  
-    if (role !== 'student') {
-      throw new UnauthorizedException('Only students can view enrolled courses');
-    }
-  
-    return this.courseService.getAllEnrolledCourses(userId);
-  }
-  
+
   
 
   @Patch(':courseId/instructor/:instructorId')
@@ -242,6 +229,22 @@ async getCourseDetails(@Param('courseId') courseId: string): Promise<Course> {
   }
   return course;
 }
+
+@Get('students/enrolled-courses')
+  @UseGuards(RolesGuard) // Ensure authentication and role validation
+  async getAllEnrolledCourses(@Req() req) {
+      console.log('Authenticated User:', req.user); // Log the authenticated user
+  
+      const userId = req.user.userId;
+      const role = req.user.role;
+  
+      if (role !== 'student') {
+          throw new UnauthorizedException('Only students can view enrolled courses');
+      }
+  
+      const enrolledCourses = await this.courseService.getAllEnrolledCourses(userId);
+      return enrolledCourses;
+  }
 
 
   
