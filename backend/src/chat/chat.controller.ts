@@ -1,11 +1,13 @@
 
-import { Controller, Post, Body, Param, NotFoundException, BadRequestException, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Param, NotFoundException, BadRequestException, Delete, Get, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Message } from './message.schema';
 import { Chat } from './chat.schema';
 import { CreateMessageDto } from './createmsg.dto';
-
+import { RolesGuard } from 'src/user-managment/roles.guard';
+import { UseGuards } from '@nestjs/common';
 @Controller('chat')
+@UseGuards(RolesGuard)
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
@@ -171,6 +173,14 @@ export class ChatController {
     }
     return { message: 'Chat deleted successfully.' };
   }
+
+  @Get(':chatId/messages')
+async getMessages(
+  @Param('chatId') chatId: string,
+  @Query('lastMessageId') lastMessageId?: string,
+) {
+  return this.chatService.getMessages(chatId, lastMessageId);
+}
   
 }
 

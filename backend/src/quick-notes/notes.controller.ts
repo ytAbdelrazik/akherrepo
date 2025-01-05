@@ -2,8 +2,10 @@ import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/commo
 import { QuickNotesService } from './notes.service';
 import { CreateNoteDto } from './dtos/create-note.dto';
 import { UpdateNoteDto } from './dtos/update-note.dto';
-
+import{RolesGuard} from 'src/user-managment/roles.guard';
+import { UseGuards } from '@nestjs/common';
 @Controller('notes')
+@UseGuards(RolesGuard)
 export class QuickNotesController {
   constructor(private readonly quickNotesService: QuickNotesService) {}
 

@@ -29,17 +29,18 @@ export class ChatService {
     }
   
     let isInstructor = false;
-    // First check if user is an instructor
+    // First check if the user is an instructor
     if (user.role === 'instructor') {
       // Only then check if they teach this specific course
       isInstructor = await this.userService.istheinstructorInCourse(courseId, userId);
     }
   
-    // Check if the creator is enrolled in the course
-    const isEnrolled = await this.userService.isStudentEnrolledInCourse(courseId, userId);
-  
-    if (!isEnrolled && !isInstructor) {
-      throw new BadRequestException('Creator must be enrolled in or teaching the course to create a group chat.');
+    // If the user is not an instructor, check if they are enrolled in the course
+    if (!isInstructor) {
+      const isEnrolled = await this.userService.isStudentEnrolledInCourse(courseId, userId);
+      if (!isEnrolled) {
+        throw new BadRequestException('Creator must be enrolled in or teaching the course to create a group chat.');
+      }
     }
   
     const existingChats = await this.chatModel.find({ courseId });
@@ -54,6 +55,7 @@ export class ChatService {
   
     return chat;
   }
+  
 
   async createOneToOneChat(userId1: string, userId2: string, courseId: string): Promise<Chat> {
     const user1 = await this.userService.getUserById(userId1);
@@ -298,7 +300,13 @@ export class ChatService {
 // const userObjectId = new Types.ObjectId(userId);
   
 
-  
+async getMessages(chatId: string, lastMessageId?: string) {
+  const filter = lastMessageId
+    ? { chatId, _id: { $gt: lastMessageId } }
+    : { chatId };
+
+  return this.messageModel.find(filter).sort({ createdAt: 1 });
+}
   
 } 
   

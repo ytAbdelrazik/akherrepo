@@ -20,6 +20,7 @@ import { QuickNotesModule } from './quick-notes/notes.module';
 import { BackupModule } from './backup/backup.module';
 import { QuestionBankModule } from './interactive-modules/question-bank.module';
 
+import { DiscussionsModule } from './course-management/discussions/discussions.module'; // Add this
 
 
 @Module({
@@ -42,6 +43,7 @@ import { QuestionBankModule } from './interactive-modules/question-bank.module';
     BackupModule,
     QuestionBankModule,
     ResponsesModule,
+    DiscussionsModule,
 
 
     // Schemas

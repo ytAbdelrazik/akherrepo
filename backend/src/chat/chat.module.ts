@@ -16,7 +16,7 @@ import { Admin } from 'mongodb';
 import { AdminSchema } from 'src/user-managment/admin.schema';
 import { NotificationService } from 'src/notifications/notifications.service';
 import { Notification, NotificationSchema } from 'src/notifications/notifications.schema';
-
+import { JwtModule } from '@nestjs/jwt';
 //import { ChatGateway } from './chat.gateway';
 @Module({
   imports: [
@@ -31,6 +31,8 @@ import { Notification, NotificationSchema } from 'src/notifications/notification
       {name:Notification.name,schema:NotificationSchema}
 
     ]),
+    JwtModule.register({}),
+    
   ],
   providers: [ChatService, CourseService, UserService,NotificationService],//ChatGateway],
   controllers: [ChatController],
