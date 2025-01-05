@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class Notification extends Document {
   @Prop({ required: true })
-  userId: string;  // The recipient of the notification
+  rec: string;  // The reciver of the notification "if group chat /studygroiup then chatID"name" if onetoone then reciever"
 
   @Prop({ required: true })
   message: string;  // The notification message

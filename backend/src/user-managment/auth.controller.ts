@@ -23,4 +23,11 @@ export class AuthController {
       throw new UnauthorizedException('Invalid login attempt');
     }
   }
+
+
+  @Post('logout')
+  async logout(@Body() body: { userId: string; token: string }) {
+    const { userId, token } = body;
+    return await this.authService.logout(userId, token);
+  }
 }

@@ -6,7 +6,7 @@ import { CreateUserdto } from '../user-managment/dots/CreateUser.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FailedLoginDocument } from './failed-login.schema';
-
+import{blacklistToken} from './token-blacklist';
 @Injectable()
 export class AuthService {
   private readonly adminPassphrase = 'admin'; // Passphrase for admin
@@ -113,6 +113,14 @@ export class AuthService {
       role: user.role,
       userId: user.userId,  // Include role here
     };
+  }
+  async logout(userId: string, token: string): Promise<boolean> {
+    // Optionally verify the user's token validity if necessary
+  
+    // Add token to the blacklist
+    blacklistToken(token); // Corrected the typo by using the imported function
+  
+    return true;
   }
 
   

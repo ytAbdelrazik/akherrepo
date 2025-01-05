@@ -199,8 +199,9 @@ export class ChatService {
 
     chat.messages.push(message._id as Types.ObjectId);
     await chat.save();
-    const notificationMessage = `You have a new message from ${senderId}`;
-    await this.notificationService.createNotification( senderId, notificationMessage, 'message');
+    const notificationMessage = `You have a new message from ${senderId} from chat ${chatId}`;
+    await this.notificationService.createNotification( chatId, notificationMessage, 'message');
+    
 
     return message;
   }
@@ -231,7 +232,7 @@ export class ChatService {
     chat.messages.push(message._id as Types.ObjectId);
     await chat.save();
     const notificationMessage = `You have a new message from ${senderId}`;
-    await this.notificationService.createNotification( senderId, notificationMessage, 'message');
+    await this.notificationService.createNotification( userId2, notificationMessage, 'message');
     
 
     return message;
