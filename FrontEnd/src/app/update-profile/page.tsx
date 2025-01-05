@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import apiClient from "../../utils/apiClient";
 import { jwtDecode } from "jwt-decode";
+import Link from "next/link";
 
 interface DecodedToken {
   userId: string;
@@ -111,7 +112,17 @@ const UpdateProfile: React.FC = () => {
         >
           Update Profile
         </button>
+
+        <div className="mt-6 text-center">
+      <Link
+        href="/student/dashboard"
+        className="bg-gray-600 text-white px-6 py-2 rounded-md shadow hover:bg-gray-700"
+      >
+        Back to Dashboard
+      </Link>
+    </div>
       </div>
+      
     </div>
   );
 };

@@ -40,8 +40,8 @@ const SearchCourses: React.FC = () => {
     }
   };
 
-  const handleBackToDashboard = () => {
-    router.push("/student/dashboard"); // Navigate back to the dashboard
+  const handleBackToPreviousPage = () => {
+    router.back(); // Navigate back to the previous page
   };
 
   return (
@@ -72,14 +72,17 @@ const SearchCourses: React.FC = () => {
         {loading ? (
           <p className="text-gray-600 text-center">Loading courses...</p>
         ) : (
-            <ul className="space-y-4">
+          <ul className="space-y-4">
             {courses.length > 0 ? (
               courses.map((course) => (
                 <li
                   key={course.courseId}
                   className="p-4 bg-white shadow rounded-lg border border-gray-200"
                 >
-                  <a href={`/courses/${course.courseId}`} className="text-xl font-semibold text-blue-600 hover:underline">
+                  <a
+                    href={`/courses/${course.courseId}`}
+                    className="text-xl font-semibold text-blue-600 hover:underline"
+                  >
                     {course.title}
                   </a>
                   <p className="text-gray-500">Category: {course.category}</p>
@@ -90,16 +93,15 @@ const SearchCourses: React.FC = () => {
               <p className="text-gray-500 text-center">No courses found.</p>
             )}
           </ul>
-          
         )}
 
-        {/* Back to Dashboard Button */}
+        {/* Back to Previous Page Button */}
         <div className="mt-8 text-center">
           <button
-            onClick={handleBackToDashboard}
+            onClick={handleBackToPreviousPage}
             className="px-6 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600"
           >
-            Back to Dashboard
+            Back
           </button>
         </div>
       </div>

@@ -17,13 +17,13 @@ const admingpage = () => {
         <button style={styles.button} onClick={() => router.push('dashboard/user')}>
           Users
         </button>
-        <button style={styles.button} onClick={() => navigateTo('/logs')}>
+        <button style={styles.button} onClick={() => navigateTo('dashboard/logss')}>
           Logs
         </button>
-        <button style={styles.button} onClick={() => navigateTo('/courses')}>
+        <button style={styles.button} onClick={() => navigateTo('dashboard/courses')}>
           Courses
         </button>
-        <button style={styles.button} onClick={() => navigateTo('/schedule-backup')}>
+        <button style={styles.button} onClick={() => navigateTo('dashboard/schedule-backup')}>
           Schedule Backup
         </button>
       </div>
